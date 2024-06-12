@@ -1,6 +1,7 @@
 // const express = require("express");
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import authroutes from "./routes/auth.routes.js";
@@ -11,10 +12,17 @@ import connectToMongoDB from "../db/connetToMongoDB.js";
 dotenv.config();
 
 const app = express();
+
+app.use(cors({ origin: "http://localhost:3000" }));
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  console.log(`Request received: ${req.method} ${req.url}`);
+  next();
+});
 
 app.use("/api/auth", authroutes);
 app.use("/api/messages", messageroutes);
