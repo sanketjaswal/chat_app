@@ -50,7 +50,7 @@ const SignUp = () => {
 
           <div>
             <label className="label p-2 ">
-              <span className="text-base label-text">Uxcxcxsername</span>
+              <span className="text-base label-text">Username</span>
             </label>
             <input
               type="text"
