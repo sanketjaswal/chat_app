@@ -1,9 +1,11 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import axios from "axios";
+import { useAuthContext } from "../context/AuthContext";
+// import axios from "axios";
 
 const useSignUp = () => {
   const [loading, setLoading] = useState(false);
+  const { setAuthUser } = useAuthContext();
 
   const signup = async ({
     fullname,
@@ -12,21 +14,22 @@ const useSignUp = () => {
     confirmPassword,
     gender,
   }) => {
-    const success = handleInputErrors(
+    // console.log(fullname, username, password, confirmPassword, gender);
+
+    const success = handleInputErrors({
       fullname,
       username,
       password,
       confirmPassword,
-      gender
-    );
-
+      gender,
+    });
     if (!success) return;
 
     setLoading(true);
     try {
-      const res = await axios.post(`/api/auth/signup`, {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
-        headers: { "Content-Type": "appplication/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fullname,
           username,
@@ -36,10 +39,13 @@ const useSignUp = () => {
         }),
       });
 
-      console.log(res);
-
       const data = await res.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      localStorage.setItem("chat-user", JSON.stringify(data));
       console.log(data);
+      setAuthUser(data);
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -51,25 +57,27 @@ const useSignUp = () => {
 };
 export default useSignUp;
 
-function handleInputErrors(
+function handleInputErrors({
   fullname,
   username,
   password,
   confirmPassword,
-  gender
-) {
+  gender,
+}) {
+  // console.log(fullname, username, password, confirmPassword, gender);
+
   if (!fullname || !username || !password || !confirmPassword || !gender) {
-    toast.error("Please fill all the fields");
+    toast.error("Please fill in all fields");
     return false;
   }
 
   if (password !== confirmPassword) {
-    toast.error("Passwords dont match");
+    toast.error("Passwords do not match");
     return false;
   }
 
   if (password.length < 6) {
-    toast.error("Password too weak");
+    toast.error("Password must be at least 6 characters");
     return false;
   }
 

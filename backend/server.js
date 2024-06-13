@@ -14,15 +14,11 @@ dotenv.config();
 const app = express();
 
 app.use(cors({ origin: "http://localhost:3000" }));
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.use(express.json());
 app.use(cookieParser());
-
-app.use((req, res, next) => {
-  console.log(`Request received: ${req.method} ${req.url}`);
-  next();
-});
 
 app.use("/api/auth", authroutes);
 app.use("/api/messages", messageroutes);
