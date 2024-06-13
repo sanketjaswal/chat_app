@@ -10,14 +10,14 @@ Some Features:
 -    Error handling both on the server and on the client
 
 
-### Build the app
+### Start the server
 
 ```shell
-npm run build
+npm run server
 ```
 
-### Start the app
+### Start the client
 
 ```shell
-npm start
+npm run dev
 ```
